@@ -38,34 +38,31 @@ G4VPhysicalVolume* DetectorConstruction::Construct()
   G4Material* silicon = nist->FindOrBuildMaterial("G4_Si");
   G4Material* sio2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
-  // World
+  // World: The simulation volume encompassing all other volumes.
+  // It uses a vacuum material (G4_Galactic).
   G4Box* solidWorld = new G4Box("World", fWorldSize / 2, fWorldSize / 2, fWorldSize / 2);
   G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, vacuum, "World");
   G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0);
 
   // Silicon Substrate
-  // Positioned so the top surface is at z=0 (or slightly below if we count overlayer)
-  // Let's put the interface at z=0. So Si goes from -500nm to 0.
+  // We position the interface between Si and SiO2 at z=0.
+  // The Silicon substrate extends downwards from z=0 to z=-500nm.
   G4Box* solidSubstrate = new G4Box("Substrate", fSubstrateSizeX / 2, fSubstrateSizeY / 2, fSubstrateSizeZ / 2);
   G4LogicalVolume* logicSubstrate = new G4LogicalVolume(solidSubstrate, silicon, "Substrate");
   new G4PVPlacement(0, G4ThreeVector(0, 0, -fSubstrateSizeZ / 2), logicSubstrate, "Substrate", logicWorld, false, 0);
 
   // SiO2 Overlayer
-  // From z=0 to z=1nm
+  // This 1nm layer sits directly on top of the silicon substrate.
+  // It extends from z=0 to z=1nm.
   G4Box* solidOverlayer = new G4Box("Overlayer", fSubstrateSizeX / 2, fSubstrateSizeY / 2, fOverlayerThickness / 2);
   G4LogicalVolume* logicOverlayer = new G4LogicalVolume(solidOverlayer, sio2, "Overlayer");
   new G4PVPlacement(0, G4ThreeVector(0, 0, fOverlayerThickness / 2), logicOverlayer, "Overlayer", logicWorld, false, 0);
 
   // Detector
-  // Hemisphere 1000nm above sample. Let's make it a thin shell or just a surface.
-  // We'll use a sphere shell as a sensitive volume.
-  // The center is at (0,0,0) (interface)? Or above?
-  // "The detector should be a hemisphere 1000 nm above the sample."
-  // This could mean the *center* of the hemisphere is 1000nm above, or the *surface*.
-  // Let's assume a hemisphere surface located at Z=1000nm.
-  // Since particles are emitted upwards, a hemisphere centered at (0,0,0) with Radius=1000nm covers the emission.
-  // Let's use a Sphere shell at R=1000nm.
-  // Inner radius 1000nm, outer radius 1001nm.
+  // Implemented as a hemispherical shell centered at the origin (sample surface).
+  // The inner radius is 1000nm, matching the requirement for detection "1000 nm above the sample".
+  // This captures particles emitted upwards from the surface.
+  // We use a thin shell (1nm thick) to act as a sensitive volume for detection.
   G4double detectorInnerRadius = fDetectorPosition;
   G4double detectorOuterRadius = fDetectorPosition + 1.0*nm;
 

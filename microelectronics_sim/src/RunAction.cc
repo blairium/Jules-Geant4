@@ -8,24 +8,28 @@ RunAction::RunAction()
   analysisManager->SetVerboseLevel(1);
   analysisManager->SetFileName("microelec_output");
 
-  // Enable merging of output files for multithreading
-  // This avoids separate files for each worker thread (e.g., _t0.root, _t1.root)
-  // if built with GEANT4_BUILD_MULTITHREADED=ON
-  // Note: Only works for Root output format.
+  // Configure Ntuple Merging:
+  // When running in Multi-Threaded mode, Geant4 creates worker threads. By default,
+  // each thread writes to a separate file (output_t0.root, output_t1.root, etc.).
+  // This command merges all data into a single file (microelec_output.root) at the end of the run.
   analysisManager->SetNtupleMerging(true);
 
-  // Create Ntuples/Trees
+  // --- Output Data Structure Definition ---
 
-  // Ntuple 0: Spatial Distribution Inside Si/SiO2
+  // Ntuple 0: "ElectronDistribution"
+  // Used to store the spatial coordinates of electrons at every step inside the Si/SiO2 volumes.
+  // This allows reconstructing the track structure or "cloud" of electrons.
   analysisManager->CreateNtuple("ElectronDistribution", "Spatial Distribution of Electrons");
   analysisManager->CreateNtupleDColumn("x"); // Position in nm
   analysisManager->CreateNtupleDColumn("y");
   analysisManager->CreateNtupleDColumn("z");
-  analysisManager->CreateNtupleDColumn("kineticEnergy"); // eV
-  analysisManager->CreateNtupleIColumn("volumeID"); // 0=Si, 1=SiO2
+  analysisManager->CreateNtupleDColumn("kineticEnergy"); // Kinetic energy in eV
+  analysisManager->CreateNtupleIColumn("volumeID"); // ID to distinguish material: 0=Si, 1=SiO2
   analysisManager->FinishNtuple();
 
-  // Ntuple 1: Detector Hits
+  // Ntuple 1: "DetectorHits"
+  // Stores the position and energy of electrons specifically when they cross the
+  // sensitive detector boundary located 1000nm above the sample.
   analysisManager->CreateNtuple("DetectorHits", "Electrons Detected");
   analysisManager->CreateNtupleDColumn("x");
   analysisManager->CreateNtupleDColumn("y");
@@ -33,8 +37,10 @@ RunAction::RunAction()
   analysisManager->CreateNtupleDColumn("kineticEnergy");
   analysisManager->FinishNtuple();
 
-  // Histogram for Energy Spectrum
-  // Range 0-100 eV, binning 0.05 eV -> 2000 bins
+  // Histogram 0: "EnergySpectrum"
+  // A 1D histogram to bin the kinetic energies of detected electrons.
+  // Range: 0 to 100 eV.
+  // Binning: 2000 bins => 100 eV / 2000 = 0.05 eV per bin width.
   analysisManager->CreateH1("EnergySpectrum", "Secondary Electron Emission Spectrum", 2000, 0., 100.);
 }
 

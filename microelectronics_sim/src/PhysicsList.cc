@@ -9,13 +9,17 @@ PhysicsList::PhysicsList()
 {
   SetVerboseLevel(1);
 
-  // Standard EM Physics (Option 4 is accurate for low energies)
-  // This handles the initial photon interaction (Photoelectric effect) and transport in vacuum/other materials
+  // Standard EM Physics (Option 4):
+  // We include this to handle general electromagnetic interactions, especially for the primary photons
+  // (Photoelectric effect, Compton scattering, etc.) and for particle transport outside of the
+  // specific microelectronics regions or for particles not handled by MicroElec physics.
+  // Option4 is generally the most accurate standard EM physics constructor.
   RegisterPhysics(new G4EmStandardPhysics_option4());
 
-  // MicroElec Physics - this handles the specific microdosimetry in Silicon
-  // Note: G4EmMicroElecPhysics might override standard processes for specific particles in specific regions if configured correctly,
-  // or it adds specific models. In many examples, it's used alongside standard EM.
+  // MicroElec Physics:
+  // This physics list provides very detailed, low-energy electron transport models specifically
+  // for Silicon. It is crucial for simulating the track structure and energy deposition
+  // at the nanometer scale in the substrate.
   RegisterPhysics(new G4EmMicroElecPhysics());
 
   // Decay physics

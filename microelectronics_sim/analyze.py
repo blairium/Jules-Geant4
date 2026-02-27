@@ -30,7 +30,8 @@ except Exception as e:
     print(f"Error opening ROOT file: {e}")
     exit(1)
 
-# 1. Spatial Distribution of Electrons inside Si and SiO2
+# --- Part 1: Spatial Distribution Analysis ---
+# Reads data from "ElectronDistribution" Ntuple which contains steps inside the material.
 try:
     tree_dist = file["ElectronDistribution"]
     x = tree_dist["x"].array(library="np")
@@ -38,7 +39,8 @@ try:
     z = tree_dist["z"].array(library="np")
     volID = tree_dist["volumeID"].array(library="np")
 
-    # Plot Z distribution (depth profile)
+    # Plot 1: Z-Axis Distribution (Depth Profile)
+    # Separates data by volume ID (0=Si, 1=SiO2) to show distribution in each layer.
     plt.figure(figsize=(10, 6))
     plt.hist(z[volID==0], bins=100, alpha=0.7, label='Silicon (Substrate)', color='blue')
     plt.hist(z[volID==1], bins=100, alpha=0.7, label='SiO2 (Overlayer)', color='green')
@@ -50,7 +52,8 @@ try:
     plt.savefig(f"{output_dir}/electron_depth_profile.png")
     plt.close()
 
-    # Plot X-Y distribution (top view)
+    # Plot 2: X-Y Lateral Distribution (Top View)
+    # Shows the spread of electron interactions across the surface area.
     plt.figure(figsize=(8, 8))
     plt.scatter(x, y, s=1, alpha=0.1)
     plt.xlabel('X Position (nm)')
@@ -64,7 +67,8 @@ try:
 except Exception as e:
     print(f"Could not analyze spatial distribution: {e}")
 
-# 2. Detector Analysis
+# --- Part 2: Detector Analysis ---
+# Reads data from "DetectorHits" Ntuple which contains electrons reaching the sensitive boundary.
 try:
     tree_det = file["DetectorHits"]
     x_det = tree_det["x"].array(library="np")
@@ -72,7 +76,8 @@ try:
     z_det = tree_det["z"].array(library="np")
     ke_det = tree_det["kineticEnergy"].array(library="np")
 
-    # Spatial Distribution at Detector
+    # Plot 3: Detector Spatial Distribution
+    # Map of where electrons hit the detector hemisphere, colored by energy.
     plt.figure(figsize=(8, 8))
     plt.scatter(x_det, y_det, c=ke_det, cmap='viridis', s=5)
     plt.colorbar(label='Kinetic Energy (eV)')
@@ -84,10 +89,10 @@ try:
     plt.savefig(f"{output_dir}/detector_spatial_distribution.png")
     plt.close()
 
-    # Energy Spectrum
-    # Using the Ntuple data to recreate the spectrum for flexible plotting
+    # Plot 4: Secondary Electron Emission Spectrum
+    # Recreates the energy spectrum using the Ntuple data for better plotting control.
     plt.figure(figsize=(10, 6))
-    # Binning: 0 to 100 eV with 0.05 eV steps
+    # Binning: Defined as 0.05 eV steps from 0 to 100 eV.
     bins = np.arange(0, 100.05, 0.05)
     plt.hist(ke_det, bins=bins, color='red', alpha=0.7, edgecolor='black', linewidth=0.5)
     plt.xlabel('Kinetic Energy (eV)')
