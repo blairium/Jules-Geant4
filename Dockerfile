@@ -1,21 +1,26 @@
-FROM ubuntu:22.04
+FROM physino/geant4:latest
 
 # Install basic dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    cmake \
+# AlmaLinux uses dnf
+RUN dnf update -y && dnf install -y \
+    epel-release \
+    && dnf install -y \
     git \
+    cmake \
+    gcc-c++ \
+    make \
     wget \
-    libexpat1-dev \
-    libx11-dev \
-    libxmu-dev \
-    libgl1-mesa-dev \
-    libglu1-mesa-dev \
+    which \
+    expat-devel \
+    libX11-devel \
+    libXmu-devel \
+    mesa-libGL-devel \
+    mesa-libGLU-devel \
     python3 \
     python3-pip \
-    python3-venv \
-    nlohmann-json3-dev \
-    && rm -rf /var/lib/apt/lists/*
+    python3-devel \
+    nlohmann-json-devel \
+    && dnf clean all
 
 # Create a virtual environment for Python
 RUN python3 -m venv /opt/venv
@@ -25,11 +30,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 RUN pip3 install --no-cache-dir numpy matplotlib uproot
 
 # Install ROOT
-# Using a pre-built binary for Ubuntu 22.04
+# Using a pre-built binary for AlmaLinux 9
 WORKDIR /opt
-RUN wget https://root.cern/download/root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
-    && tar -xzf root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz \
-    && rm root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11.4.tar.gz
+RUN wget https://root.cern/download/root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz \
+    && tar -xzf root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz \
+    && rm root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz
 
 # Source ROOT
 ENV ROOTSYS=/opt/root
@@ -37,39 +42,20 @@ ENV PATH=$ROOTSYS/bin:$PATH
 ENV LD_LIBRARY_PATH=$ROOTSYS/lib
 ENV PYTHONPATH=$ROOTSYS/lib
 
-# Install Geant4
-# We will build Geant4 from source as it's often the most reliable way to get specific configurations
-# and datasets.
-WORKDIR /opt
-RUN git clone -b v11.2.0 --depth 1 https://github.com/Geant4/geant4.git geant4_src \
-    && mkdir geant4_build \
-    && cd geant4_build \
-    && cmake -DCMAKE_INSTALL_PREFIX=/opt/geant4 \
-             -DGEANT4_INSTALL_DATA=ON \
-             -DGEANT4_USE_OPENGL_X11=ON \
-             -DGEANT4_USE_RAYTRACER_X11=ON \
-             -DGEANT4_BUILD_MULTITHREADED=ON \
-             ../geant4_src \
-    && make -j$(nproc) \
-    && make install \
-    && cd .. \
-    && rm -rf geant4_src geant4_build
-
-# Environment variables for Geant4
-ENV GEANT4_DIR=/opt/geant4
-ENV PATH=$GEANT4_DIR/bin:$PATH
-ENV LD_LIBRARY_PATH=$GEANT4_DIR/lib:$LD_LIBRARY_PATH
+# Install Geant4 Datasets
+# The base image has Geant4 libraries but not datasets to save space.
+RUN geant4-config --install-datasets
 
 # Copy the simulation code
 COPY . /app/microelectronics_sim
 WORKDIR /app/microelectronics_sim
 
 # Build the simulation
-# Rely on GEANT4_DIR being set and CMAKE finding the config files automatically
-# or point to the standard cmake directory.
+# Rely on GEANT4 being in the path from the base image
+# We remove the hardcoded Geant4_DIR since physino/geant4 configures it
 RUN mkdir build \
     && cd build \
-    && cmake -DGeant4_DIR=$GEANT4_DIR/lib/cmake/Geant4 .. \
+    && cmake .. \
     && make -j$(nproc)
 
 # Default command
