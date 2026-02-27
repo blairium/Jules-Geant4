@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y \
     libexpat1-dev \
     libx11-dev \
     libxmu-dev \
+    libgl1-mesa-dev \
+    libglu1-mesa-dev \
     python3 \
     python3-pip \
     python3-venv \
@@ -32,8 +34,8 @@ RUN wget https://root.cern/download/root_v6.30.02.Linux-ubuntu22.04-x86_64-gcc11
 # Source ROOT
 ENV ROOTSYS=/opt/root
 ENV PATH=$ROOTSYS/bin:$PATH
-ENV LD_LIBRARY_PATH=$ROOTSYS/lib:$LD_LIBRARY_PATH
-ENV PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
+ENV LD_LIBRARY_PATH=$ROOTSYS/lib
+ENV PYTHONPATH=$ROOTSYS/lib
 
 # Install Geant4
 # We will build Geant4 from source as it's often the most reliable way to get specific configurations
