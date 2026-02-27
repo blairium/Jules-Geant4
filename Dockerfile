@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
     python3 \
     python3-pip \
     python3-venv \
+    nlohmann-json3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Create a virtual environment for Python
