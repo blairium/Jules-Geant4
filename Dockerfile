@@ -41,6 +41,7 @@ ENV ROOTSYS=/opt/root
 ENV PATH=$ROOTSYS/bin:$PATH
 ENV LD_LIBRARY_PATH=$ROOTSYS/lib
 ENV PYTHONPATH=$ROOTSYS/lib
+ENV CMAKE_PREFIX_PATH=$ROOTSYS${CMAKE_PREFIX_PATH:+:${CMAKE_PREFIX_PATH}}
 
 # Install Geant4 Datasets
 # The base image has Geant4 libraries but not datasets to save space.
