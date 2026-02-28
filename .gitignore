@@ -1,3 +1,9 @@
+build/
+build
+CMakeCache.txt
+CMakeFiles/
+*.o
+*.root
 # Prerequisites
 *.d
 
