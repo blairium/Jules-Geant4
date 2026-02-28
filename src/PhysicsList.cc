@@ -1,6 +1,6 @@
 #include "PhysicsList.hh"
 #include "G4SystemOfUnits.hh"
-#include "G4EmMicroElecPhysics.hh"
+#include "MicroElecPhysics.hh"
 #include "G4EmStandardPhysics_option4.hh" // Standard EM physics for higher energy/other particles
 #include "G4EmLowEPPhysics.hh" // Low energy package if needed, but option4 is generally robust
 
@@ -20,7 +20,7 @@ PhysicsList::PhysicsList()
   // This physics list provides very detailed, low-energy electron transport models specifically
   // for Silicon. It is crucial for simulating the track structure and energy deposition
   // at the nanometer scale in the substrate.
-  RegisterPhysics(new G4EmMicroElecPhysics());
+  RegisterPhysics(new MicroElecPhysics());
 
   // Decay physics
   RegisterPhysics(new G4DecayPhysics());
