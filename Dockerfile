@@ -32,9 +32,9 @@ RUN pip3 install --no-cache-dir numpy matplotlib uproot
 # Install ROOT
 # Using a pre-built binary for AlmaLinux 9
 WORKDIR /opt
-RUN wget https://root.cern/download/root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz \
-    && tar -xzf root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz \
-    && rm root_v6.30.02.Linux-almalinux9.3-x86_64-gcc11.4.tar.gz
+RUN wget https://root.cern/download/root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz \
+    && tar -xzf root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz \
+    && rm root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz
 
 # Source ROOT
 ENV ROOTSYS=/opt/root
