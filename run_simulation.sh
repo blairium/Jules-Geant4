@@ -1,10 +1,11 @@
 #!/bin/bash
 
 # Build the simulation
+# Rely on CMake to find Geant4 from the environment (physino/geant4 base image)
 cd /app/microelectronics_sim
 mkdir -p build
 cd build
-cmake -DGeant4_DIR=$GEANT4_DIR/lib/cmake/Geant4 ..
+cmake ..
 make -j$(nproc)
 
 # Run the simulation (1000 events)
