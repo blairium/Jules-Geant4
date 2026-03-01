@@ -31,16 +31,32 @@ RUN pip3 install --no-cache-dir numpy matplotlib uproot
 
 # Install ROOT
 # Using a pre-built binary for AlmaLinux 9
-WORKDIR /opt
-RUN wget https://root.cern/download/root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz \
-    && tar -xzf root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz \
-    && rm root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz
 
-# Source ROOT
-ENV ROOTSYS=/opt/root
-ENV PATH=$ROOTSYS/bin:$PATH
-ENV LD_LIBRARY_PATH=$ROOTSYS/lib
-ENV PYTHONPATH=$ROOTSYS/lib
+
+ENV LANG=C.UTF-8
+
+ARG ROOT_BIN=root_v6.36.08.Linux-almalinux9.7-x86_64-gcc11.5.tar.gz
+
+WORKDIR /opt
+
+COPY packages packages
+
+RUN dnf update -q -y \
+ && dnf install -y epel-release \
+ && dnf install -y $(cat packages)\
+ && rm -f packages \
+ && curl -O https://root.cern/download/${ROOT_BIN} \
+ && tar -xzvf ${ROOT_BIN} \
+ && rm -f ${ROOT_BIN} \
+ && echo /opt/root/lib >> /etc/ld.so.conf \
+ && ldconfig
+
+ENV ROOTSYS /opt/root
+ENV PATH $ROOTSYS/bin:$PATH
+ENV PYTHONPATH $ROOTSYS/lib:$PYTHONPATH
+ENV CLING_STANDARD_PCH none
+
+
 
 # Install Geant4 Datasets
 # The base image has Geant4 libraries but not datasets to save space.
