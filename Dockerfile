@@ -1,24 +1,64 @@
-FROM physino/geant4:latest
+FROM physino/geant4:11.4.0
 
 # Install basic dependencies
 # AlmaLinux uses dnf
-RUN dnf update -y && dnf install -y \
-    epel-release \
-    && dnf install -y \
-    git \
-    cmake \
+RUN dnf install -y epel-release dnf-plugins-core && dnf config-manager --set-enabled crb && dnf update -y && dnf install -y \
+    avahi-compat-libdns_sd-devel \
+    avahi-devel \
+    binutils \
+    curl-minimal --allowerasing \
+    davix-devel \
+    fcgi \
+    fcgi-devel \
+    fftw-devel \
+    ftgl-devel \
+    gcc \
     gcc-c++ \
-    make \
-    wget \
-    which \
-    expat-devel \
+    gcc-gfortran \
+    giflib-devel \
+    git \
+    gl2ps-devel \
+    gl2ps-devel \
+    glew-devel \
+    graphviz-devel \
+    gsl-devel \
+    libAfterImage-devel \
+    libjpeg-turbo-devel \
+    libtiff-devel \
     libX11-devel \
-    libXmu-devel \
+    libXext-devel \
+    libXft-devel \
+    libxml2-devel \
+    libXpm-devel \
+    libzstd-devel \
+    lz4-devel \
+    make \
     mesa-libGL-devel \
     mesa-libGLU-devel \
+    ncurses-libs \
+    ocaml-findlib-devel \
+    openssl-devel \
+    pcre-devel \
+    protobuf-compiler \
+    protobuf-devel \
+    pythia8-devel \
     python3 \
-    python3-pip \
     python3-devel \
+    python3-numpy \
+    python3-pip \
+    qt5-qtwebengine-devel \
+    rapidyaml-devel \
+    redhat-rpm-config \
+    tbb tbb-devel \
+    unuran-devel \
+    xrootd-server-devel \
+    xxhash-libs xxhash-devel \
+    xz-devel \
+    zeromq-devel \
+    zlib-devel \
+    cmake \
+    wget \
+    which \
     nlohmann-json-devel \
     && dnf clean all
 
@@ -66,13 +106,6 @@ RUN geant4-config --install-datasets
 COPY . /app/microelectronics_sim
 WORKDIR /app/microelectronics_sim
 
-# Build the simulation
-# Rely on GEANT4 being in the path from the base image
-# We remove the hardcoded Geant4_DIR since physino/geant4 configures it
-RUN mkdir build \
-    && cd build \
-    && cmake .. \
-    && make -j$(nproc)
 
 # Default command
 CMD ["/bin/bash"]

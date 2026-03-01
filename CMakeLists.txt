@@ -26,6 +26,7 @@ file(GLOB headers ${PROJECT_SOURCE_DIR}/include/*.hh)
 # Add the executable, and link it to the Geant4 libraries
 add_executable(microelectronics_sim microelectronics_sim.cc ${sources} ${headers})
 target_link_libraries(microelectronics_sim ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
+target_link_options(microelectronics_sim PRIVATE -Wl,-rpath,/opt/root/lib -Wl,-rpath-link,/opt/root/lib)
 
 # Copy all scripts to the build directory (for ease of execution)
 foreach(_script init_vis.mac run.mac vis.mac)

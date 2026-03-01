@@ -4,7 +4,7 @@
 #include "G4UIExecutive.hh"
 
 #include "DetectorConstruction.hh"
-#include "PhysicsList.hh"
+#include "MicroElecPhysics.hh"
 #include "ActionInitialization.hh"
 
 int main(int argc, char** argv)
@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
   // Set mandatory initialization classes
   runManager->SetUserInitialization(new DetectorConstruction());
-  runManager->SetUserInitialization(new PhysicsList());
+  runManager->SetUserInitialization(new MicroElecPhysics());
   runManager->SetUserInitialization(new ActionInitialization());
 
   // Initialize visualization
