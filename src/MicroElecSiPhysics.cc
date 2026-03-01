@@ -57,7 +57,7 @@
 #include "G4IonFluctuations.hh"
 #include "G4UniversalFluctuation.hh"
 
-#include "ElectronCapture.hh"
+// #include "ElectronCapture.hh"
 
 #include "G4UAtomicDeexcitation.hh"
 
@@ -164,8 +164,8 @@ void MicroElecSiPhysics::ConstructEM()
 
       // THE FOLLOWING PROCESS WILL KILL ALL ELECTRONS BELOW A SELECTED ENERY THRESHOLD
       // Capture of low-energy e-
-      ElectronCapture* ecap = new ElectronCapture("Target", 16.7*eV);
-      pmanager->AddDiscreteProcess(ecap);
+      //ElectronCapture* ecap = new ElectronCapture("Target", 16.7*eV);
+      //pmanager->AddDiscreteProcess(ecap);
 
     } else if ( particleName == "proton" ) {
 

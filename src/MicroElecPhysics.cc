@@ -65,7 +65,7 @@
 #include "G4IonFluctuations.hh"
 #include "G4UniversalFluctuation.hh"
 
-#include "ElectronCapture.hh"
+// #include "ElectronCapture.hh"
 
 #include "G4UAtomicDeexcitation.hh"
 
@@ -218,8 +218,8 @@ void MicroElecPhysics::ConstructEM()
 	  MicroElecSurf->SetProcessManager(pmanager);
 	  pmanager->AddDiscreteProcess(MicroElecSurf);//*/
 
-     ElectronCapture* ecap = new ElectronCapture("Target",0.9*eV); //<--- Piges pour Al2O3
-	  pmanager->AddDiscreteProcess(ecap);//*/
+     //ElectronCapture* ecap = new ElectronCapture("Target",0.9*eV); //<--- Piges pour Al2O3
+	  //pmanager->AddDiscreteProcess(ecap);//*/
 
     } else if ( particleName == "proton" ) {
 
