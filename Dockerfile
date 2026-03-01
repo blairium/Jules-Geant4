@@ -51,10 +51,10 @@ RUN dnf update -q -y \
  && echo /opt/root/lib >> /etc/ld.so.conf \
  && ldconfig
 
-ENV ROOTSYS /opt/root
-ENV PATH $ROOTSYS/bin:$PATH
-ENV PYTHONPATH $ROOTSYS/lib:$PYTHONPATH
-ENV CLING_STANDARD_PCH none
+ENV ROOTSYS=/opt/root
+ENV PATH=$ROOTSYS/bin:$PATH
+ENV PYTHONPATH=$ROOTSYS/lib:$PYTHONPATH
+ENV CLING_STANDARD_PCH=none
 
 
 
