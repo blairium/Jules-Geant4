@@ -6,7 +6,8 @@ RunAction::RunAction()
 {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
   analysisManager->SetVerboseLevel(1);
-  analysisManager->SetFileName("microelec_output");
+  analysisManager->SetDefaultFileType("root");
+  analysisManager->SetFileName("microelec_output.root");
 
   // Configure Ntuple Merging:
   // When running in Multi-Threaded mode, Geant4 creates worker threads. By default,
@@ -46,13 +47,13 @@ RunAction::RunAction()
 
 RunAction::~RunAction()
 {
-  delete G4AnalysisManager::Instance();
 }
 
 void RunAction::BeginOfRunAction(const G4Run*)
 {
   G4AnalysisManager* analysisManager = G4AnalysisManager::Instance();
-  analysisManager->OpenFile();
+  analysisManager->SetDefaultFileType("root");
+  analysisManager->OpenFile("microelec_output.root");
 }
 
 void RunAction::EndOfRunAction(const G4Run*)

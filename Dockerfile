@@ -12,7 +12,7 @@ RUN dnf update -q -y \
  && dnf install -y yum-utils \
  && dnf config-manager --set-enabled crb \
  && dnf install -y epel-release \
- && dnf install -y $(cat packages)\
+ && dnf install --allowerasing -y $(cat packages)\
  && rm -f packages \
  && curl -O https://root.cern/download/${ROOT_BIN} \
  && tar -xzvf ${ROOT_BIN} \
