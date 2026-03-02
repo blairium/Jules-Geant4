@@ -34,12 +34,18 @@ DetectorConstruction::~DetectorConstruction()
 G4VPhysicalVolume* DetectorConstruction::Construct()
 {
   G4NistManager* nist = G4NistManager::Instance();
-  G4Material* vacuum = nist->FindOrBuildMaterial("G4_Galactic");
+
+  // vacuum for world
+  static const double densityGas     = 1.e-25*g/cm3; // universe_mean_density; //from PhysicalConstants.h
+  static const double pressureGas    = 3.e-18*pascal;
+  static const double temperatureGas = 2.73*kelvin;
+  G4Material* vacuum = new G4Material("Vacuum", 1., 1.01*g/mole, densityGas, kStateGas,temperatureGas,pressureGas);
+
   G4Material* silicon = nist->FindOrBuildMaterial("G4_Si");
   G4Material* sio2 = nist->FindOrBuildMaterial("G4_SILICON_DIOXIDE");
 
   // World: The simulation volume encompassing all other volumes.
-  // It uses a vacuum material (G4_Galactic).
+  // It uses a vacuum material.
   G4Box* solidWorld = new G4Box("World", fWorldSize / 2, fWorldSize / 2, fWorldSize / 2);
   G4LogicalVolume* logicWorld = new G4LogicalVolume(solidWorld, vacuum, "World");
   G4VPhysicalVolume* physWorld = new G4PVPlacement(0, G4ThreeVector(), logicWorld, "World", 0, false, 0);
