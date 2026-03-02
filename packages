@@ -1,6 +1,7 @@
 avahi-compat-libdns_sd-devel
 avahi-devel
 binutils
+cmake
 curl
 davix-devel
 fcgi
@@ -31,6 +32,7 @@ make
 mesa-libGL-devel
 mesa-libGLU-devel
 ncurses-libs
+nlohmann-json-devel
 ocaml-findlib-devel
 openssl-devel
 pcre-devel
@@ -46,6 +48,8 @@ rapidyaml-devel
 redhat-rpm-config
 tbb-devel
 unuran-devel
+wget
+which
 xrootd-server-devel
 xxhash-devel
 xz-devel

@@ -59,3 +59,6 @@ CTestTestfile.cmake
 _deps
 CMakeUserPresets.json
 
+/geant4/*
+/root-geat4/*
+/microelectronics_sim/*

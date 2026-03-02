@@ -1,0 +1,9 @@
+services:
+  g4:
+    build:
+      dockerfile: ./Dockerfile
+    command: /usr/bin/bash
+    volumes:
+      - ./geant4/datasets:/root/geant4/datasets
+      - ./:/app
+      - ./geant4:/root/geant4
